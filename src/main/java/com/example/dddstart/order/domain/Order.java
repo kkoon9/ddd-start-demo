@@ -1,4 +1,4 @@
-package com.example.dddstart.order;
+package com.example.dddstart.order.domain;
 
 import java.util.List;
 import java.util.Objects;
