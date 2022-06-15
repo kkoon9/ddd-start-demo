@@ -7,25 +7,25 @@ public class Order {
     private OrderNo id;
     private OrderState state;
     private ShippingInfo shippingInfo;
-    private List<OrderLine> orderLines;
+    private OrderLines orderLines;
     private Money totalAmounts;
+    private Orderer orderer;
 
     public Order(List<OrderLine> orderLines, ShippingInfo shippingInfo) {
-        setOrderLines(orderLines);
+        changeOrderLines(orderLines);
         setShippingInfo(shippingInfo);
     }
 
-    private void setOrderLines(List<OrderLine> orderLines) {
-        verifyAtLeastOneOrMoreOrderLines(orderLines);
-        this.orderLines = orderLines;
-        calculateTotalAmounts();
+    private void changeOrderLines(List<OrderLine> newLines) {
+        orderLines.changeOrderLines(newLines);
+        this.totalAmounts = orderLines.getTotalAmounts();
     }
 
-    private void setShippingInfo(ShippingInfo shippingInfo) {
+    private void setShippingInfo(ShippingInfo newShippingInfo) {
         if(shippingInfo == null) {
             throw new IllegalArgumentException("no ShippingInfo");
         }
-        this.shippingInfo = shippingInfo;
+        this.shippingInfo = newShippingInfo;
     }
 
     public void changeShippingInfo(ShippingInfo newShippingInfo) {
@@ -59,10 +59,16 @@ public class Order {
 
     private void calculateTotalAmounts() {
         int sum = orderLines
+                .getLines()
                 .stream()
-                .mapToInt(x -> x.getAmounts())
+                .mapToInt(x -> x.getPrice().getValue() * x.getQuantity())
                 .sum();
         this.totalAmounts = new Money(sum);
+    }
+
+    public void shipTo(ShippingInfo newShippingInfo) {
+        verifyNotYetShipped();
+        setShippingInfo(newShippingInfo);
     }
 
     @Override

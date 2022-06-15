@@ -1,7 +1,9 @@
 package com.example.dddstart.order.domain;
 
 import com.example.dddstart.product.Product;
+import lombok.Getter;
 
+@Getter
 public class OrderLine {
     private Product product;
     private Money price;
@@ -17,10 +19,5 @@ public class OrderLine {
 
     private Money calculateAmounts() {
         return price.multiply(quantity);
-    }
-
-    public int getAmounts() {
-        // TODO 추후에 구현
-        return 0;
     }
 }
