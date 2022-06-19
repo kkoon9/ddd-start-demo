@@ -1,16 +1,26 @@
 package com.example.dddstart.order.domain;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "purchase_order")
 public class Order {
+
+    @EmbeddedId
     private OrderNo id;
     private OrderState state;
+    @Embedded
     private ShippingInfo shippingInfo;
-    private OrderLines orderLines;
     private Money totalAmounts;
+    @Embedded
     private Orderer orderer;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "order_line", joinColumns = @JoinColumn(name = "order_number"))
+    @OrderColumn(name = "line_idx")
+    private List<OrderLine> orderLines;
     public Order(List<OrderLine> orderLines, ShippingInfo shippingInfo) {
         changeOrderLines(orderLines);
         setShippingInfo(shippingInfo);

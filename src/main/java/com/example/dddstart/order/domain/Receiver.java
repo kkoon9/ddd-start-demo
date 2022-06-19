@@ -1,7 +1,13 @@
 package com.example.dddstart.order.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Receiver {
     private String name;
     private String phoneNumber;
